@@ -1,6 +1,7 @@
 import QtQuick 2.3
 
 Item {
+    id: container
     width: parent.width
     height: 50
 
@@ -13,7 +14,6 @@ Item {
     signal deleteButtonShown()
 
     signal contentRectangleClicked()
-    // you can add other signal(s) here
 
     function hideDeleteButton(withAnimation) {
         if (withAnimation) {
