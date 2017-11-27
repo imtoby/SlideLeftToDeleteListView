@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>SlideLeftToDeleteDelegate.qml</file>
+    </qresource>
+</RCC>
