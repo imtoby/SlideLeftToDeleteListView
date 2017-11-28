@@ -9,7 +9,8 @@ Window {
     ListView {
         id: listView
         anchors.fill: parent
-        model: 40
+        model: testModel
+
         highlightFollowsCurrentItem: true
 
         delegate: SlideLeftToDeleteDelegate {
@@ -18,7 +19,7 @@ Window {
             height: 50
 
             Text {
-                text: qsTr("Index ") + index
+                text: name + " " + value
                 anchors.centerIn: parent
                 color: listView.currentIndex == index ? "red" : ""
             }
@@ -31,14 +32,24 @@ Window {
             }
 
             onContentRectangleClicked: {
-                listView.currentItem.hideDeleteButton(true)
-                listView.currentIndex = index
+                // TODO something
+                console.log(mouse.x, mouse.y)
             }
 
-            onDeleteButtonShown: {
-                listView.currentItem.hideDeleteButton(true)
-                listView.currentIndex = index
+            onDeleteButtonClicked: {
+                testModel.remove(index)
             }
+        }
+    }
+
+    ListModel {
+        id: testModel
+    }
+
+    Component.onCompleted: {
+        // test data
+        for (var i=0; i<100; ++i) {
+            testModel.append({"name": "test", "value": i})
         }
     }
 }

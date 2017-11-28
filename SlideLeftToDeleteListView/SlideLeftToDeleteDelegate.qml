@@ -5,15 +5,55 @@ Item {
     width: parent.width
     height: 50
 
+    property alias contentRectangleAcceptedButtons: contentMouseArea.acceptedButtons
+    property color contentRectangleColor: "#FFFFFF"
+    property alias contentRectangleContainsMouse: contentMouseArea.containsMouse
+    property alias contentRectangleCursorShape: contentMouseArea.cursorShape
+    property alias contentRectangleEnabled: contentRect.enabled
+    property alias contentRectangleHoverEnabled: contentMouseArea.hoverEnabled
+    property alias contentRectangleMouseX: contentMouseArea.mouseX
+    property alias contentRectangleMouseY: contentMouseArea.mouseY
+    property alias contentRectangleIsPressed: contentMouseArea.pressed
+    property alias contentRectanglePressedButtons: contentMouseArea.pressedButtons
+    property color contentRectanglePressedColor: "#CCCCCC"
+    property alias contentRectanglePreventStealing: contentMouseArea.preventStealing
+    property alias contentRectanglePropagateComposedEvents: contentMouseArea.propagateComposedEvents
+
+    property alias deleteButtonAcceptedButtons: deleteButtonMouseArea.acceptedButtons
+    property color deleteButtonColor: "#FF0000"
+    property alias deleteButtonContainsMouse: deleteButtonMouseArea.containsMouse
+    property alias deleteButtonCursorShape: deleteButtonMouseArea.cursorShape
+    property alias deleteButtonEnabled: deleteButtonMouseArea.enabled
+    property alias deleteButtonHoverEnabled: deleteButtonMouseArea.hoverEnabled
+    property alias deleteButtonMouseX: deleteButtonMouseArea.mouseX
+    property alias deleteButtonMouseY: deleteButtonMouseArea.mouseY
+    property alias deleteButtonIsPressed: deleteButtonMouseArea.pressed
+    property alias deleteButtonPressedButtons: deleteButtonMouseArea.pressedButtons
+    property color deleteButtonPressedColor: "#80FF0000"
+    property alias deleteButtonPreventStealing: deleteButtonMouseArea.preventStealing
+    property alias deleteButtonPropagateComposedEvents: deleteButtonMouseArea.propagateComposedEvents
     property int deleteButtonWidth: 100
+
     property int hideOrShowAnimationDuration: 200
     property int slidingDistanceTriggerChangeState: 5
 
+    signal deleteButtonCanceled()
     signal deleteButtonClicked()
     signal deleteButtonHidden()
+    signal deleteButtonPressed()
+    signal deleteButtonReleased()
     signal deleteButtonShown()
 
-    signal contentRectangleClicked()
+    signal contentRectangleCanceled()
+    signal contentRectangleClicked(var mouse)
+    signal contentRectangleDoubleClicked(var mouse)
+    signal contentRectangleEntered()
+    signal contentRectangleExited()
+    signal contentRectanglePositionChanged(var mouse)
+    signal contentRectanglePressAndHold(var mouse)
+    signal contentRectanglePressed(var mouse)
+    signal contentRectangleReleased(var mouse)
+    signal contentRectangleWheel(var wheel)
 
     function hideDeleteButton(withAnimation) {
         if (withAnimation) {
@@ -31,14 +71,29 @@ Item {
         }
     }
 
+    onContentRectangleClicked: {
+        if (ListView.view !== null) {
+            ListView.view.currentItem.hideDeleteButton(true)
+            ListView.view.currentIndex = index
+        }
+    }
+
+    onDeleteButtonShown: {
+        if (ListView.view !== null) {
+            ListView.view.currentItem.hideDeleteButton(true)
+            ListView.view.currentIndex = index
+        }
+    }
+
     Rectangle {
         id: deleteButton
         width: parent.deleteButtonWidth
         height: parent.height
-        color: "red"
+        color: deleteButtonMouseArea.pressed ?
+                   deleteButtonPressedColor  : deleteButtonColor
         anchors.right: parent.right
-        opacity: deleteButtonMouseArea.pressed ? 0.5 :
-                                                 Math.max((0 - contentRect.x) / deleteButton.width, 0.4)
+        opacity: Math.max((0 - contentRect.x) / deleteButton.width, 0.4)
+
 
         Text {
             text: qsTr("DELETE")
@@ -50,8 +105,17 @@ Item {
         MouseArea {
             id: deleteButtonMouseArea
             anchors.fill: parent
+            onCanceled: {
+                deleteButtonCanceled()
+            }
             onClicked: {
                 deleteButtonClicked()
+            }
+            onPressed: {
+                deleteButtonPressed()
+            }
+            onReleased: {
+                deleteButtonReleased()
             }
         }
     }
@@ -60,6 +124,8 @@ Item {
         id: contentRect
         width: parent.width
         height: parent.height
+        color: contentMouseArea.pressed ? contentRectanglePressedColor
+                                        : contentRectangleColor
         state: "hidden"
 
         onStateChanged: {
@@ -85,6 +151,7 @@ Item {
         }
 
         MouseArea {
+            id: contentMouseArea
             anchors.fill: parent
             drag.target: contentRect
             drag.axis: Drag.XAxis
@@ -113,8 +180,32 @@ Item {
                 }
             }
 
+            onCanceled: {
+                contentRectangleCanceled()
+            }
             onClicked: {
-                contentRectangleClicked()
+                contentRectangleClicked(mouse)
+            }
+            onDoubleClicked: {
+                contentRectangleDoubleClicked(mouse)
+            }
+            onEntered: {
+                contentRectangleEntered()
+            }
+            onExited: {
+                contentRectangleExited()
+            }
+            onPositionChanged: {
+                contentRectanglePositionChanged(mouse)
+            }
+            onPressAndHold: {
+                contentRectanglePressAndHold(mouse)
+            }
+            onReleased: {
+                contentRectangleReleased(mouse)
+            }
+            onWheel: {
+                contentRectangleWheel(wheel)
             }
         }
     }
