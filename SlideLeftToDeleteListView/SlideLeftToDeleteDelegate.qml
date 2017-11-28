@@ -5,6 +5,8 @@ Item {
     width: parent.width
     height: 50
 
+    default property alias __content: contentRect.data
+
     property alias contentRectangleAcceptedButtons: contentMouseArea.acceptedButtons
     property color contentRectangleColor: "#FFFFFF"
     property alias contentRectangleContainsMouse: contentMouseArea.containsMouse
