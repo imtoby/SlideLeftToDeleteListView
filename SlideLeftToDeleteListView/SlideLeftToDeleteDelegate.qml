@@ -5,7 +5,7 @@ Item {
     width: parent.width
     height: 50
 
-    default property alias __content: contentRect.data
+    // public:
 
     property alias contentRectangleAcceptedButtons: contentMouseArea.acceptedButtons
     property color contentRectangleColor: "#FFFFFF"
@@ -72,6 +72,8 @@ Item {
             contentRect.x = 0 - deleteButton.width
         }
     }
+
+    // private:
 
     onContentRectangleClicked: {
         if (ListView.view !== null) {
@@ -213,5 +215,8 @@ Item {
             }
         }
     }
+
+    // private:
+    default property alias __content: contentMouseArea.data
 
 }

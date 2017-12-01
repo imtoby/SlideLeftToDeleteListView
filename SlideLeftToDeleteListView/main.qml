@@ -31,6 +31,25 @@ Window {
                 anchors.bottom: parent.bottom
             }
 
+            Rectangle {
+                width: 100
+                height: 40
+                color: testMouseArea.pressed ? "#E86688" : "#80E86688"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 9
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "a button"
+                }
+
+                MouseArea {
+                    id: testMouseArea
+                    anchors.fill: parent
+                }
+            }
+
             onContentRectangleClicked: {
                 // TODO something
                 console.log(mouse.x, mouse.y)
